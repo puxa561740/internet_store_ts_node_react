@@ -1,7 +1,10 @@
 **node_modules/
 **/dist/
 **/coverage/
-
+**/.agents/
+**/.claude/
+**/.cursor/
+**/.devin/
 
 # compiled output
 /dist
@@ -49,6 +52,7 @@ logs
 **/.env.test.local
 **/.env.production.local
 **/.env.local
+**/process.env
 
 # temp directory
 **/.temp
