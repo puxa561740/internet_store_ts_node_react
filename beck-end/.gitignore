@@ -1,9 +1,3 @@
-**/.env
-**node_modules/
-**/dist/
-**/coverage/
-
-
 # compiled output
 /dist
 /node_modules
