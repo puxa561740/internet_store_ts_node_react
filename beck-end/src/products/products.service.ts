@@ -14,30 +14,35 @@ import { QueryProductDto } from './dto/query-product.dto.js';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async create(createProductDto: CreateProductDto) {
-  return this.prisma.product.create({
-    data: {
-      name: createProductDto.name,
-      description: createProductDto.description,
-      price: createProductDto.price,
-      stock: createProductDto.stock ?? 0,
+  async create(data: CreateProductDto) {
+    return this.prisma.product.create({
+      data: {
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        stock: data.stock,
 
-      category: {
-        connect: {
-          id: createProductDto.categoryId,
+        category: {
+          connect: {
+            id: data.categoryId,
+          },
+        },
+
+        brand: {
+          connect: {
+            id: data.brandId,
+          },
         },
       },
 
-      brand: {
-        connect: {
-          id: createProductDto.brandId,
-        },
+      include: {
+        category: true,
+        brand: true,
       },
-    },
-  });
-}
+    });
+  }
 
   async findAll(query: QueryProductDto) {
     const {
@@ -53,34 +58,34 @@ export class ProductsService {
     const where = {
       ...(search
         ? {
-            OR: [
-              {
-                name: {
-                  contains: search,
-                  mode: 'insensitive' as const,
-                },
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: 'insensitive' as const,
               },
-              {
-                description: {
-                  contains: search,
-                  mode: 'insensitive' as const,
-                },
+            },
+            {
+              description: {
+                contains: search,
+                mode: 'insensitive' as const,
               },
-            ],
-          }
+            },
+          ],
+        }
         : {}),
 
       ...(minPrice !== undefined || maxPrice !== undefined
         ? {
-            price: {
-              ...(minPrice !== undefined
-                ? { gte: minPrice }
-                : {}),
-              ...(maxPrice !== undefined
-                ? { lte: maxPrice }
-                : {}),
-            },
-          }
+          price: {
+            ...(minPrice !== undefined
+              ? { gte: minPrice }
+              : {}),
+            ...(maxPrice !== undefined
+              ? { lte: maxPrice }
+              : {}),
+          },
+        }
         : {}),
     };
 
@@ -93,6 +98,10 @@ export class ProductsService {
         take: limit,
         orderBy: {
           [sortBy]: order,
+        },
+        include: {
+          category: true,
+          brand: true,
         },
       }),
 

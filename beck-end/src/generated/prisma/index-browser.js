@@ -137,7 +137,9 @@ exports.Prisma.ProductScalarFieldEnum = {
   price: 'price',
   stock: 'stock',
   categoryId: 'categoryId',
-  brandId: 'brandId'
+  brandId: 'brandId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
